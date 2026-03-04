@@ -21,7 +21,7 @@ option(USE_OPENGL    "Enable OpenGL support"   OFF )
 find_package(OpenMP)
 
 file(GLOB_RECURSE MeshIR_IMPL_SOURCES CONFIGURE_DEPENDS
-  ${CMAKE_CURRENT_SOURCE_DIR}/core/impl//*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ir_alloc_impl/*.cpp
 )
 
 file(GLOB_RECURSE MeshIR_TEST_SOURCES CONFIGURE_DEPENDS
@@ -43,8 +43,8 @@ add_executable(MeshIR
 
 target_include_directories(MeshIR PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_SOURCE_DIR}/core
-  ${CMAKE_CURRENT_SOURCE_DIR}/core/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/include/meshir
   #${CRUSHBLAS_ROOT}/core
   #${CRUSHBLAS_ROOT}/core/include
   #${CRUSHBLAS_ROOT}/core/impl
