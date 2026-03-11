@@ -16,10 +16,10 @@ enum op_table{
 struct ir_node{
   op_table                        op_type;
   const meshir_types::tensor_id  *node_inputs;
-  size_t                          num_node_inputs; 
   const meshir_types::tensor_id  *node_outputs;
-  size_t                          num_node_outputs; 
   meshir_types::node_id           node_id;
+  size_t                          num_node_outputs; 
+  size_t                          num_node_inputs;
   size_t                          num_attrs; 
   size_t                          attr_base_index; 
 };
