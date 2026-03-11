@@ -21,7 +21,7 @@ struct ir_graph{
   size_t                           attr_capacity; 
   
   
- /**
+ /*
   * @brief Indexes graph node attributes from id's and keys.
   * @param graph_node_id current node id.
   * @param graph_node_key current node's key. 

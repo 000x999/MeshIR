@@ -45,14 +45,33 @@ meshir_types::type_attr* meshir_graph::ir_graph::find_attr
 }
 
 meshir_types::tensor_id meshir_graph::ir_graph::alloc_tensor_id(){
-
+  assert(num_graph_tensors < tensor_capacity);   
+  // return a new stable tensor handle
+  // id = num_graph_tensors (before incrementing)
+  // increment tensor count 
+  // enforce num_graph_tensors <= tensor_capacity
+  meshir_types::tensor_id current_tensor_id;
+  current_tensor_id.id = num_graph_tensors;  
+  num_graph_tensors++; 
+  return current_tensor_id; 
 }
+
 meshir_types::node_id meshir_graph::ir_graph::alloc_node_id(){
-
+  assert(num_graph_nodes < node_capacity); 
+  meshir_types::node_id current_node_id; 
+  current_node_id.id = num_graph_nodes; 
+  num_graph_nodes++; 
+  return current_node_id; 
 }
+
 meshir_types::attr_id meshir_graph::ir_graph::alloc_attr_id(){
-
+  assert(num_graph_node_attrs < attr_capacity); 
+  meshir_types::attr_id current_attr_id; 
+  current_attr_id.id = num_graph_node_attrs;
+  num_graph_node_attrs++; 
+  return current_attr_id; 
 }
+
 meshir_types::graph_id meshir_graph::ir_graph::alloc_graph_id(){
 
 }
