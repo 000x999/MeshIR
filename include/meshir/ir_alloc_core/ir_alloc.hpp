@@ -44,9 +44,9 @@ public:
     return ir_aligned_ptr; 
   }
 
-  void   ir_reset     ();
-  size_t ir_used      ();
-  size_t ir_remaining ();
+  void   is_reset     ();
+  size_t is_used      ();
+  size_t is_remaining ();
 };
 };
 #endif 

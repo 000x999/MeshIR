@@ -64,23 +64,56 @@ meshir_types::node_id meshir_graph::ir_graph::alloc_node_id(){
   return current_node_id; 
 }
 
-meshir_types::attr_id meshir_graph::ir_graph::alloc_attr_id(){
-  assert(num_graph_node_attrs < attr_capacity); 
-  meshir_types::attr_id current_attr_id; 
-  current_attr_id.id = num_graph_node_attrs;
-  num_graph_node_attrs++; 
-  return current_attr_id; 
-}
+meshir_types::attr_id meshir_graph::ir_graph::alloc_attr_key_id(const std::string &name){
+  if(attr_key_table.contains(name)){
+    return attr_key_table[name]; 
+  }
+
+  meshir_types::attr_id current_key_id;
+  current_key_id.id    = next_attr_key_id;
+  next_attr_key_id++; 
+  attr_key_table[name] = current_key_id;
+
+  return current_key_id; 
+} 
 
 meshir_types::graph_id meshir_graph::ir_graph::alloc_graph_id(){
-
+  static size_t next_graph_id = 1; 
+  if(id.id != 0){
+    return id; 
+  }
+  id.id = next_graph_id;
+  next_graph_id++; 
+  return id; 
 }
 
-size_t meshir_graph::ir_graph::get_graph_node_count(){}
-size_t meshir_graph::ir_graph::get_graph_attr_count(){}
-size_t meshir_graph::ir_graph::get_graph_tensor_count(){}
-size_t meshir_graph::ir_graph::get_graph_arena_capacity_bytes(){}
+size_t meshir_graph::ir_graph::get_graph_node_count(){
+  return num_graph_nodes;
+}
 
-void meshir_graph::ir_graph::ensure_node_capacity(size_t required_size){}
-void meshir_graph::ir_graph::ensure_tensor_capacity(size_t required_size){}
-void meshir_graph::ir_graph::ensure_attr_capacity(size_t required_size){}
+size_t meshir_graph::ir_graph::get_graph_attr_count(){
+  return num_graph_node_attrs;
+}
+
+size_t meshir_graph::ir_graph::get_graph_tensor_count(){
+  return num_graph_tensors;
+}
+
+size_t meshir_graph::ir_graph::get_graph_arena_capacity_bytes(){
+  auto tensor_size = tensor_capacity * sizeof(meshir_types::tensor_descriptor);
+  auto node_size   = node_capacity   * sizeof(meshir_ops::ir_node);
+  auto attr_size   = attr_capacity   * sizeof(meshir_types::attr_entries); 
+  
+  auto total_size  = tensor_size + node_size + attr_size; 
+  return total_size; 
+}
+
+void meshir_graph::ir_graph::ensure_node_capacity(size_t required_size){
+}
+
+void meshir_graph::ir_graph::ensure_tensor_capacity(size_t required_size){
+}
+
+void meshir_graph::ir_graph::ensure_attr_capacity(size_t required_size){
+}
+

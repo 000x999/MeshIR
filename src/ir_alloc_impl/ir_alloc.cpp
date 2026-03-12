@@ -15,7 +15,7 @@ memory::ir_arena::ir_arena(size_t ir_arena_size)
   ir_buffer(new char[ir_arena_size])
 {}
 
-void   memory::ir_arena::ir_reset       () { ir_offset = 0;                    }
-size_t memory::ir_arena::ir_used        () { return ir_offset;                 }
-size_t memory::ir_arena::ir_remaining   () { return (ir_capacity - ir_offset); }
+void   memory::ir_arena::is_reset       () { ir_offset = 0;                    }
+size_t memory::ir_arena::is_used        () { return ir_offset;                 }
+size_t memory::ir_arena::is_remaining   () { return (ir_capacity - ir_offset); }
 
