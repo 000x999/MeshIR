@@ -9,13 +9,15 @@
 namespace meshir_graph{
 struct ir_graph{
   meshir_types::graph_id                                 id;
+  explicit                                               ir_graph(size_t arena_size);
+                                                        ~ir_graph();
   memory::ir_arena                                       graph_arena; 
   meshir_ops::ir_node                                   *graph_nodes;
   meshir_types::tensor_descriptor                       *graph_tensors;
   meshir_types::attr_entries                            *graph_node_attrs;
   std::unordered_map<std::string, meshir_types::attr_id> attr_key_table;
   
-  
+  size_t                           graph_arena_size;  
   size_t                           num_graph_nodes;
   size_t                           num_graph_node_attrs;
   size_t                           num_graph_tensors;
@@ -47,6 +49,7 @@ struct ir_graph{
   void                           ensure_node_capacity             (size_t required_size); 
   void                           ensure_tensor_capacity           (size_t required_size); 
   void                           ensure_attr_capacity             (size_t required_size); 
+  void                           reset_graph                      (); 
 }; 
 
 };// namespace 

@@ -16,10 +16,10 @@ private:
   size_t align_forward ( size_t ptr_address );
   
 public:
-  explicit ir_arena    ( size_t nn_arena_size );
+  explicit ir_arena    ( size_t ir_arena_size );
 
-  ir_arena             ( const ir_arena& )  = delete;
-  ir_arena operator=   ( const ir_arena& )  = delete;
+  ir_arena             ( const ir_arena&      )  = delete;
+  ir_arena operator=   ( const ir_arena&      )  = delete;
 
   template<typename T> 
   T*     ir_alloc     ( size_t ir_alloc_size ){
@@ -44,7 +44,7 @@ public:
     return ir_aligned_ptr; 
   }
 
-  void   is_reset     ();
+  void   ir_reset     ();
   size_t is_used      ();
   size_t is_remaining ();
 };
