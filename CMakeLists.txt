@@ -22,6 +22,7 @@ find_package(OpenMP)
 
 file(GLOB_RECURSE MeshIR_IMPL_SOURCES CONFIGURE_DEPENDS
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ir_alloc_impl/*.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ir_core_impl/*.cpp
 )
 
 file(GLOB_RECURSE MeshIR_TEST_SOURCES CONFIGURE_DEPENDS

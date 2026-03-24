@@ -1,17 +1,17 @@
 #ifndef IRGRAPH_HPP 
 #define IRGRAPH_HPP 
 #include <cstddef>
+#include <span>
 #include <unordered_map>
+#include <string> 
 #include "ir_core/ir_types.hpp"
 #include "ir_core/ir_op_types.hpp"
 #include "ir_alloc_core/ir_alloc.hpp"
 
 namespace meshir_graph{
-struct ir_graph{
+class ir_graph{
+private:
   meshir_types::graph_id                                 id;
-  explicit                                               ir_graph(size_t arena_size);
-                                                        ~ir_graph();
-  memory::ir_arena                                       graph_arena; 
   meshir_ops::ir_node                                   *graph_nodes;
   meshir_types::tensor_descriptor                       *graph_tensors;
   meshir_types::attr_entries                            *graph_node_attrs;
@@ -32,7 +32,11 @@ struct ir_graph{
   * @param graph_node_key current node's key. 
   * @return Returns key value attribute pair. 
   */
-  
+public:   
+  memory::ir_arena               graph_arena;
+  explicit                       ir_graph                         (size_t arena_size);
+                                ~ir_graph                         ();
+
   const meshir_types::type_attr *find_attr                        (meshir_types::node_id graph_node_id, meshir_types::attr_id graph_node_key) const noexcept;
   meshir_types::type_attr       *find_attr                        (meshir_types::node_id graph_node_id, meshir_types::attr_id graph_node_key)       noexcept;
  
@@ -48,7 +52,11 @@ struct ir_graph{
 
   void                           ensure_node_capacity             (size_t required_size); 
   void                           ensure_tensor_capacity           (size_t required_size); 
-  void                           ensure_attr_capacity             (size_t required_size); 
+  void                           ensure_attr_capacity             (size_t required_size);
+  const meshir_types::tensor_id *store_tensor_ids                (std::span<const meshir_types::tensor_id> ids);
+  void                           attach_attr                      (const meshir_types::node_id &node_id, const meshir_types::attr_entries &attr);
+  void                           write_tensor                     (meshir_types::tensor_id id, const meshir_types::tensor_descriptor &tensor); 
+  void                           write_node                       (meshir_types::node_id id, const meshir_ops::ir_node &node);  
   void                           reset_graph                      (); 
 }; 
 

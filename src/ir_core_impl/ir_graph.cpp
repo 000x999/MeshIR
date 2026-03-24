@@ -1,6 +1,7 @@
 #include "ir_core/ir_graph.hpp"
 #include "ir_core/ir_types.hpp"
 #include <cassert>
+#include <cstring>
 #include <climits>
 #include <memory>
 
@@ -197,6 +198,53 @@ void meshir_graph::ir_graph::ensure_attr_capacity(size_t required_size){
 
   attr_capacity = new_attr_capacity; 
   graph_node_attrs = new_attrs; 
+}
+
+const meshir_types::tensor_id* meshir_graph::ir_graph::store_tensor_ids(std::span<const meshir_types::tensor_id> ids){
+  if(ids.empty()){
+    return nullptr; 
+  }
+  auto *storage = graph_arena.ir_alloc<meshir_types::tensor_id>(ids.size());
+  std::memcpy(storage, ids.data(), ids.size() * sizeof(meshir_types::tensor_id));
+  return storage; 
+}
+
+void meshir_graph::ir_graph::attach_attr(const meshir_types::node_id &node_id, const meshir_types::attr_entries &attr){
+  assert(node_id.id < num_graph_nodes); 
+  auto &current_node = graph_nodes[node_id.id];
+  
+  const size_t begin_index = current_node.attr_base_index; 
+  const size_t end_index   = begin_index + current_node.num_attrs; 
+
+  assert(begin_index <= num_graph_node_attrs); 
+  assert(end_index   <= num_graph_node_attrs); 
+
+  for(size_t i = begin_index; i < end_index; ++i){
+    if(graph_node_attrs[i].attr_key == attr.attr_key){
+      graph_node_attrs[i].value = attr.value; 
+      return; 
+    }
+  }
+  
+  ensure_attr_capacity(num_graph_node_attrs + 1); 
+  if(current_node.num_attrs == 0){
+    current_node.attr_base_index = num_graph_node_attrs; 
+  }else{
+    assert(current_node.attr_base_index + current_node.num_attrs == num_graph_node_attrs); 
+  }
+  new(&graph_node_attrs[num_graph_node_attrs]) meshir_types::attr_entries(attr); 
+  ++num_graph_node_attrs; 
+  ++current_node.num_attrs;
+}
+
+void meshir_graph::ir_graph::write_tensor(meshir_types::tensor_id id, const meshir_types::tensor_descriptor &tensor){
+  assert(id.id < num_graph_tensors);
+  new(&graph_tensors[id.id]) meshir_types::tensor_descriptor(tensor); 
+}
+
+void meshir_graph::ir_graph::write_node(meshir_types::node_id id, const meshir_ops::ir_node &node){
+  assert(id.id < num_graph_nodes);
+  new(&graph_nodes[id.id]) meshir_ops::ir_node(node); 
 }
 
 void meshir_graph::ir_graph::reset_graph(){
